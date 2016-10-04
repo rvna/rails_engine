@@ -41,5 +41,14 @@ RSpec.describe 'Items API' do
    expect(output.count).to eq(2)
  end
 
+ it 'finds a random item' do
+   create(:item, name: 'cucumber')
+
+   get '/api/v1/items/random'
+   output = JSON.parse(response.body)
+
+   expect(response.status).to eq(200)
+   expect(output["name"]).to eq('cucumber')
+ end
 
 end
