@@ -71,7 +71,15 @@ RSpec.describe 'Invoices API' do
     expect(output.count).to eq(2)
   end
 
+  it 'finds a random invoice' do
+    create(:invoice, status: 'shipped')
 
+    get '/api/v1/invoices/random'
+    output = JSON.parse(response.body)
+
+    expect(response.status).to eq(200)
+    expect(output["status"]).to eq('shipped')
+  end
     
 end
 
