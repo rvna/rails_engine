@@ -7,6 +7,12 @@ Rails.application.routes.draw do
         get 'random', to: 'merchants_random#show'
       end
       resources :merchants, only: [:index, :show]
+      namespace :transactions do
+        get 'find_all', to: 'transactions_finder#index'
+        get 'find', to: 'transactions_finder#show'
+        get 'random', to: 'transactions_random#show'
+      end
+      resources :transactions, only: [:index, :show]
     end
   end
 end
