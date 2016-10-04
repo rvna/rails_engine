@@ -12,13 +12,13 @@ describe 'transactions endpoints functioning' do
   end
 
   it 'returns JSON for specific transaction' do
-    expected = create(:transaction, invoice_id: 123)
+    expected = create(:transaction)
     get "/api/v1/transactions/#{expected.id}.json"
     actual = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
     expect(actual['id']).to eq(expected.id)
-    expect(actual['invoice_id']).to eq(123)
+    expect(actual['invoice_id']).to eq(expected.invoice_id)
   end
 
   it 'raises exception if transaction id is not found' do
@@ -32,15 +32,14 @@ describe 'transactions endpoints functioning' do
   end
 
   it 'returns JSON for transaction using find parameters' do
-    expected = create(:transaction, invoice_id: 123)
-    create(:transaction, invoice_id: 54)
-    get '/api/v1/transactions/find?invoice_id=123'
+    expected = create(:transaction)
+    create(:transaction)
+    get "/api/v1/transactions/find?invoice_id=#{expected.invoice_id}"
     actual = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
     expect(actual['id']).to eq(expected.id)
-    expect(actual['invoice_id']).to eq(123)
-    expect(actual['invoice_id']).to_not eq(54)
+    expect(actual['invoice_id']).to eq(expected.invoice_id)
   end
 
   it 'raises exception if transaction name does not match records' do
@@ -54,7 +53,7 @@ describe 'transactions endpoints functioning' do
   end
 
   it 'returns JSON for all transactions matching parameters' do
-    create(:transaction, invoice_id: 123, result: 'failed')
+    create(:transaction, result: 'failed')
     create(:transaction)
     create(:transaction)
     get '/api/v1/transactions/find_all?result=success'
