@@ -7,6 +7,9 @@ Rails.application.routes.draw do
         get 'random', to: 'invoice_random#show'
       end
       resources :invoices, only: [:index, :show]
+      namespace :items do
+        get 'find', to: 'items_finder#show'
+      end
       resources :items, only: [:index, :show]
     end
   end

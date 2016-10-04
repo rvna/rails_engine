@@ -21,4 +21,14 @@ RSpec.describe 'Items API' do
    expect(output["name"]).to eq('cucumber')
  end
 
+ it 'finds an item by name' do
+   item = create(:item, name: 'cucumber', description: 'green')
+
+   get '/api/v1/items/find?name=cucumber'
+   output = JSON.parse(response.body)
+
+   expect(response.status).to eq(200)
+   expect(output["description"]).to eq('green')
+ end
+
 end
