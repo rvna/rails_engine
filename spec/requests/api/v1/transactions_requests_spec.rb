@@ -21,20 +21,10 @@ describe 'transactions endpoints functioning' do
     expect(actual['invoice_id']).to eq(expected.invoice_id)
   end
 
-  it 'raises exception if transaction id is not found' do
-    get '/api/v1/transactions/0.json'
-    actual = JSON.parse(response.body)
-
-    expect(response.status).to eq(404)
-    expect(actual['id']).to eq(nil)
-    expect(actual['invoice_id']).to eq(nil)
-    expect(actual['error']).to eq('not-found')
-  end
-
   it 'returns JSON for transaction using find parameters' do
     expected = create(:transaction)
     create(:transaction)
-    get "/api/v1/transactions/find?invoice_id=#{expected.invoice_id}"
+    get "/api/v1/transactions/find.json?invoice_id=#{expected.invoice_id}"
     actual = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
@@ -46,21 +36,12 @@ describe 'transactions endpoints functioning' do
     create(:transaction, result: 'failed')
     create(:transaction)
     create(:transaction)
-    get '/api/v1/transactions/find_all?result=success'
+    get '/api/v1/transactions/find_all.json?result=success'
     actual = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
     expect(actual.count).to eq(2)
     expect(actual[1]['id']).to eq(Transaction.last.id)
-  end
-
-  it 'raises an exception if none of the transactions have name requested' do
-    get '/api/v1/transactions/find_all?name=no-name'
-    actual = JSON.parse(response.body)
-
-    expect(response.status).to eq(404)
-    expect(actual['id']).to eq(nil)
-    expect(actual['error']).to eq('not-found')
   end
 
   it 'returns JSON for a random transaction' do
@@ -70,5 +51,20 @@ describe 'transactions endpoints functioning' do
 
     expect(response.status).to eq(200)
     expect(actual['id']).to eq(expected.id)
+  end
+
+  it 'returns correct scope of json' do
+    transaction = create(:transaction)
+    get "/api/v1/transactions/#{transaction.id}.json"
+    actual = JSON.parse(response.body)
+    expected = {
+      'id' => transaction.id,
+      'credit_card_number' => transaction.credit_card_number,
+      'credit_card_expiration_date' => transaction.credit_card_expiration_date,
+      'result' => transaction.result,
+      'invoice_id' => transaction.invoice_id,
+    }
+
+    expect(actual).to eq(expected)
   end
 end
