@@ -75,5 +75,13 @@ describe 'merchants endpoints functioning' do
     expect(actual['error']).to eq('not-found')
   end
 
-  
+  it 'returns JSON for a random merchant' do
+    expected = create(:merchant, name: 'Dude')
+    get "/api/v1/merchants/random.json"
+    actual = JSON.parse(response.body)
+
+    expect(response.status).to eq(200)
+    expect(actual['id']).to eq(expected.id)
+    expect(actual['name']).to eq('Dude')
+  end
 end
