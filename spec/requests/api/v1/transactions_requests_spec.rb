@@ -42,16 +42,6 @@ describe 'transactions endpoints functioning' do
     expect(actual['invoice_id']).to eq(expected.invoice_id)
   end
 
-  it 'raises exception if transaction name does not match records' do
-    get '/api/v1/merchants/find?name=no-name'
-    actual = JSON.parse(response.body)
-
-    expect(response.status).to eq(404)
-    expect(actual['id']).to eq(nil)
-    expect(actual['invoice_id']).to eq(nil)
-    expect(actual['error']).to eq('not-found')
-  end
-
   it 'returns JSON for all transactions matching parameters' do
     create(:transaction, result: 'failed')
     create(:transaction)

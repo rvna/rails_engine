@@ -1,20 +1,10 @@
 class Api::V1::Merchants::FinderController < ApplicationController
   def index
-    merchants = Merchant.where(merchant_params)
-    if merchants.empty?
-      render json: {error: 'not-found'}.to_json, status: 404
-    else
-      render json: merchants, status: 200
-    end
+    @merchants = Merchant.where(merchant_params)
   end
 
   def show
-    merchant = Merchant.find_by(merchant_params)
-    if merchant.nil?
-      render json: {error: 'not-found'}.to_json, status: 404
-    else
-      render json: merchant, status: 200
-    end
+    @merchant = Merchant.find_by(merchant_params)
   end
 
   private
