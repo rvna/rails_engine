@@ -7,7 +7,7 @@ Rails.application.routes.draw do
         get 'random', to: 'invoice_random#show'
       end
       resources :invoices, only: [:index, :show]
-      resources :items, only: [:index]
+      resources :items, only: [:index, :show]
     end
   end
 end

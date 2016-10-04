@@ -10,4 +10,15 @@ RSpec.describe 'Items API' do
    expect(response.status).to eq(200)
    expect(output.count).to eq(3)
  end
+ 
+ it 'returns a single item' do
+   item = create(:item, name: 'cucumber')
+   
+   get "/api/v1/items/#{item.id}"
+   output = JSON.parse(response.body)
+
+   expect(response.status).to eq(200)
+   expect(output["name"]).to eq('cucumber')
+ end
+
 end
