@@ -1,20 +1,10 @@
 class Api::V1::InvoiceItems::FinderController < ApplicationController
   def show
-    invoice_item = InvoiceItem.find_by(invoice_item_params)
-    if invoice_item.nil?
-      render json: {error: 'not-found'}.to_json, status: 404
-    else
-      render json: invoice_item, status: 200
-    end
+    @invoice_item = InvoiceItem.find_by(invoice_item_params)
   end
 
   def index
-    invoice_item = InvoiceItem.where(invoice_item_params)
-    if invoice_item.empty?
-      render json: {error: 'not-found'}.to_json, status: 404
-    else
-      render json: invoice_item, status: 200
-    end
+    @invoice_items = InvoiceItem.where(invoice_item_params)
   end
 
   private
