@@ -3,6 +3,10 @@ class Api::V1::InvoiceItems::InvoiceItemsFinderController < ApplicationControlle
     render json: InvoiceItem.find_by(invoice_item_params)
   end
 
+  def index
+    render json: InvoiceItem.where(invoice_item_params)
+  end
+
   private
 
   def invoice_item_params
