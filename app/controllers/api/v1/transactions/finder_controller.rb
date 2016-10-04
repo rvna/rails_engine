@@ -1,4 +1,4 @@
-class Api::V1::Transactions::TransactionsFinderController < ApplicationController
+class Api::V1::Transactions::FinderController < ApplicationController
   def index
     transactions = Transaction.where(transaction_params)
     if transactions.empty?
@@ -20,6 +20,6 @@ class Api::V1::Transactions::TransactionsFinderController < ApplicationControlle
   private
 
   def transaction_params
-    params.permit(:invoice_id, :credit_card_number, :credit_card_expiration_date, :result)
+    params.permit(:id, :invoice_id, :credit_card_number, :credit_card_expiration_date, :result, :created_at, :updated_at, :invoice_id)
   end
 end

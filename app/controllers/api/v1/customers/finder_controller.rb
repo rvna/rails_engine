@@ -1,6 +1,6 @@
-class Api::V1::Customers::CustomersFinderController < ApplicationController
+class Api::V1::Customers::FinderController < ApplicationController
   def index
-    customers = find_customers
+    customers = Customer.where(customer_params)
     if customers.empty?
       render json: {error: 'not-found'}.to_json, status: 404
     else
@@ -19,15 +19,7 @@ class Api::V1::Customers::CustomersFinderController < ApplicationController
 
   private
 
-  def find_customers
-    if customer_params.values[0].is_a?(String)
-      Customer.where("#{customer_params.keys[0]} like ?", "%#{customer_params.values[0]}%")
-    else
-      Customer.where(customer_params)
-    end
-  end
-
   def customer_params
-    params.permit(:first_name, :last_name)
+    params.permit(:id, :first_name, :last_name, :created_at, :updated_at)
   end
 end

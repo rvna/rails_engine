@@ -1,4 +1,4 @@
-class Api::V1::Items::ItemsFinderController < ApplicationController
+class Api::V1::Items::FinderController < ApplicationController
   def show
     item = Item.find_by(item_params)
     if item.nil?
@@ -20,6 +20,6 @@ class Api::V1::Items::ItemsFinderController < ApplicationController
   private
 
   def item_params
-    params.permit(:id, :name, :description, :created_at, :updated_at)
+    params.permit(:id, :name, :description, :created_at, :updated_at, :merchant_id)
   end
 end

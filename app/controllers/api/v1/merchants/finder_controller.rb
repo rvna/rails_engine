@@ -1,4 +1,4 @@
-class Api::V1::Merchants::MerchantsFinderController < ApplicationController
+class Api::V1::Merchants::FinderController < ApplicationController
   def index
     merchants = Merchant.where(merchant_params)
     if merchants.empty?
@@ -20,6 +20,6 @@ class Api::V1::Merchants::MerchantsFinderController < ApplicationController
   private
 
   def merchant_params
-    params.permit(:name)
+    params.permit(:id, :name, :created_at, :updated_at)
   end
 end
