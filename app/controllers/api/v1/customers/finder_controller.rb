@@ -1,11 +1,6 @@
 class Api::V1::Customers::FinderController < ApplicationController
   def index
     @customers = Customer.where(customer_params)
-    if customers.empty?
-      render json: {error: 'not-found'}.to_json, status: 404
-    else
-      render json: customers, status: 200
-    end
   end
 
   def show

@@ -4,7 +4,7 @@ RSpec.describe 'Invoices API' do
   it 'returns a list of invoices' do
     create_list(:invoice, 3)
 
-    get '/api/v1/invoices'
+    get '/api/v1/invoices.json'
     output = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
@@ -14,7 +14,7 @@ RSpec.describe 'Invoices API' do
   it 'returns an individual invoice' do
     invoice = create(:invoice, status: 'shipped')
 
-    get "/api/v1/invoices/#{invoice.id}"
+    get "/api/v1/invoices/#{invoice.id}.json"
     output = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
@@ -80,6 +80,19 @@ RSpec.describe 'Invoices API' do
     expect(response.status).to eq(200)
     expect(output["status"]).to eq('shipped')
   end
-    
+
+  it 'returns correct scope of json' do
+    invoice = create(:invoice)
+    get "/api/v1/invoices/#{invoice.id}.json"
+    actual = JSON.parse(response.body)
+    expected = {
+      'id' => invoice.id,
+      'status' => invoice.status,
+      'customer_id' => invoice.customer_id,
+      'merchant_id' => invoice.merchant_id
+    }
+
+    expect(actual).to eq(expected)
+  end
 end
 
