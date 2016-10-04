@@ -22,6 +22,31 @@ ActiveRecord::Schema.define(version: 20161004134604) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "invoice_items", force: :cascade do |t|
+    t.integer  "item_id"
+    t.integer  "invoice_id"
+    t.integer  "quantity"
+    t.integer  "unit_price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id", using: :btree
+    t.index ["item_id"], name: "index_invoice_items_on_item_id", using: :btree
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "unit_price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "merchants", force: :cascade do |t|
     t.text     "name"
     t.datetime "created_at", null: false
@@ -37,4 +62,6 @@ ActiveRecord::Schema.define(version: 20161004134604) do
     t.datetime "updated_at",                  null: false
   end
 
+  add_foreign_key "invoice_items", "invoices"
+  add_foreign_key "invoice_items", "items"
 end
