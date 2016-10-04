@@ -37,23 +37,14 @@ describe 'customers endpoints functioning' do
     create(:customer, first_name: 'Dude', last_name: 'Franklin')
     create(:customer, first_name: 'Dude', last_name: 'Workman')
     create(:customer, first_name: 'Hey', last_name: 'Workman')
-    get '/api/v1/customers/find_all?last_name=Workman'
+    get '/api/v1/customers/find_all.json?last_name=Workman'
     actual = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
     expect(actual.count).to eq(2)
     expect(actual[1]['id']).to eq(Customer.last.id)
   end
-
-  it 'raises an exception if none of the customers have name requested' do
-    get '/api/v1/customers/find_all?name=no-name'
-    actual = JSON.parse(response.body)
-
-    expect(response.status).to eq(404)
-    expect(actual['id']).to eq(nil)
-    expect(actual['error']).to eq('not-found')
-  end
-
+  
   it 'returns JSON for a random customer' do
     expected = create(:customer)
     get "/api/v1/customers/random.json"
