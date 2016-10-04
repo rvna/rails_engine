@@ -21,34 +21,16 @@ describe 'customers endpoints functioning' do
     expect(actual['first_name']).to eq('Dude')
   end
 
-  it 'raises exception if customer id is not found' do
-    get '/api/v1/customers/0.json'
-    actual = JSON.parse(response.body)
-
-    expect(response.status).to eq(404)
-    expect(actual['id']).to eq(nil)
-    expect(actual['error']).to eq('not-found')
-  end
-
   it 'returns JSON for customer using find parameters' do
     expected = create(:customer, first_name: 'Dude')
     create(:customer, first_name: 'Dud')
-    get '/api/v1/customers/find?first_name=Dude'
+    get '/api/v1/customers/find.json?first_name=Dude'
     actual = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
     expect(actual['id']).to eq(expected.id)
     expect(actual['first_name']).to eq('Dude')
     expect(actual['first_name']).to_not eq('Dud')
-  end
-
-  it 'raises exception if customer name does not match records' do
-    get '/api/v1/merchants/find?name=no-name'
-    actual = JSON.parse(response.body)
-
-    expect(response.status).to eq(404)
-    expect(actual['id']).to eq(nil)
-    expect(actual['error']).to eq('not-found')
   end
 
   it 'returns JSON for all customers matching parameters' do
@@ -79,5 +61,18 @@ describe 'customers endpoints functioning' do
 
     expect(response.status).to eq(200)
     expect(actual['id']).to eq(expected.id)
+  end
+
+  it 'returns correct scope of json' do
+    customer = create(:customer)
+    get "/api/v1/customers/#{customer.id}.json"
+    actual = JSON.parse(response.body)
+    expected = {
+      'id' => customer.id,
+      'first_name' => customer.first_name,
+      'last_name' => customer.last_name
+    }
+
+    expect(actual).to eq(expected)
   end
 end
