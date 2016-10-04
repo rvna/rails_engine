@@ -34,7 +34,7 @@ describe 'merchants endpoints functioning' do
   it 'returns JSON for merchant using find parameters' do
     expected = create(:merchant, name: 'Dude')
     create(:merchant, name: 'Other Merch')
-    get '/api/v1/merchants/find?name=dude'
+    get '/api/v1/merchants/find?name=Dude'
     actual = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
@@ -57,11 +57,11 @@ describe 'merchants endpoints functioning' do
     create(:merchant, name: 'Dude Workman')
     create(:merchant, name: 'Awesome Dude')
     create(:merchant, name: 'Fuddy Duddy')
-    get '/api/v1/merchants/find_all?name=dude'
+    get '/api/v1/merchants/find_all?name=Dude Workman'
     actual = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
-    expect(actual.count).to eq(2)
+    expect(actual.count).to eq(1)
     expect(actual[0]['id']).to eq(Merchant.first.id)
   end
 
