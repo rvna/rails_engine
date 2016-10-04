@@ -27,6 +27,15 @@ RSpec.describe 'Invoices API' do
     expect(response.status).to eq(200)
     expect(output["status"]).to eq('shipped')
   end
+
+  it 'finds an invoice by status' do
+    create(:invoice, id: 2, status: 'shipped')
+    get '/api/v1/invoices/find?status=shipped'
+    output = JSON.parse(response.body)
+
+    expect(response.status).to eq(200)
+    expect(output["id"]).to eq(2)
+  end
     
 end
 

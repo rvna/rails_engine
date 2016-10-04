@@ -1,6 +1,12 @@
 class Api::V1::Invoices::InvoicesFinderController < ApplicationController
 
   def show
-    render json: Invoice.find_by(id: params[:id])
+    render json: Invoice.find_by(invoice_params)
+  end
+
+  private
+
+  def invoice_params
+    params.permit(:id, :status, :created_at, :updated_at)
   end
 end
