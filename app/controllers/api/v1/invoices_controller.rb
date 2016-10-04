@@ -4,6 +4,11 @@ class Api::V1::InvoicesController < ApplicationController
   end
 
   def show
-    render json: Invoice.find(params[:id])
+    invoice = Invoice.find_by(id: params[:id])
+    if invoice.nil?
+      render json: {error: 'not-found'}.to_json, status: 404
+    else
+      render json: invoice, status: 200
+    end
   end
 end

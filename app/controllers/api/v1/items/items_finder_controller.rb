@@ -1,10 +1,20 @@
 class Api::V1::Items::ItemsFinderController < ApplicationController
   def show
-    render json: Item.find_by(item_params)
+    item = Item.find_by(item_params)
+    if item.nil?
+      render json: {error: 'not-found'}.to_json, status: 404
+    else
+      render json: item, status: 200
+    end
   end
 
   def index
-    render json: Item.where(item_params)
+    item = Item.where(item_params)
+    if item.empty?
+      render json: {error: 'not-found'}.to_json, status: 404
+    else
+      render json: item, status: 200
+    end
   end
 
   private
