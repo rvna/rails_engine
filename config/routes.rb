@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :invoices, only: [:index, :show]
       namespace :items do
         get 'find', to: 'items_finder#show'
+        get 'find_all', to: 'items_finder#index'
       end
       resources :items, only: [:index, :show]
     end

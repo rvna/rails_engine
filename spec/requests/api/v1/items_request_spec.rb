@@ -22,7 +22,7 @@ RSpec.describe 'Items API' do
  end
 
  it 'finds an item by name' do
-   item = create(:item, name: 'cucumber', description: 'green')
+   create(:item, name: 'cucumber', description: 'green')
 
    get '/api/v1/items/find?name=cucumber'
    output = JSON.parse(response.body)
@@ -30,5 +30,16 @@ RSpec.describe 'Items API' do
    expect(response.status).to eq(200)
    expect(output["description"]).to eq('green')
  end
+
+ it 'finds multiple items by name' do
+   create_list(:item, 2, name: 'cucumber')
+
+   get '/api/v1/items/find_all?name=cucumber'
+   output = JSON.parse(response.body) 
+
+   expect(response.status).to eq(200)
+   expect(output.count).to eq(2)
+ end
+
 
 end
