@@ -63,6 +63,18 @@ describe 'customers endpoints functioning' do
     expect(actual[1]['id']).to eq(Customer.last.id)
   end
 
+  it 'returns JSON for all customers matching partial strings' do
+    create(:customer, first_name: 'Dude', last_name: 'Franklin')
+    create(:customer, first_name: 'Dude', last_name: 'Workman')
+    create(:customer, first_name: 'Hey', last_name: 'Workman')
+    get '/api/v1/customers/find_all?last_name=wor'
+    actual = JSON.parse(response.body)
+
+    expect(response.status).to eq(200)
+    expect(actual.count).to eq(2)
+    expect(actual[1]['id']).to eq(Customer.last.id)
+  end
+
   it 'raises an exception if none of the customers have name requested' do
     get '/api/v1/customers/find_all?name=no-name'
     actual = JSON.parse(response.body)
