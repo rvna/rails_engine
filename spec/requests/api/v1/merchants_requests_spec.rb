@@ -43,7 +43,7 @@ describe 'merchants endpoints functioning' do
     expect(actual['name']).to_not eq('Other Merch')
   end
 
-  it 'raises expection if merchant name does not match records' do
+  it 'raises exception if merchant name does not match records' do
     get '/api/v1/merchants/find?name=no-name'
     actual = JSON.parse(response.body)
 

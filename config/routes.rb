@@ -13,6 +13,12 @@ Rails.application.routes.draw do
         get 'random', to: 'transactions_random#show'
       end
       resources :transactions, only: [:index, :show]
+      namespace :customers do
+        get 'find_all', to: 'customers_finder#index'
+        get 'find', to: 'customers_finder#show'
+        get 'random', to: 'customers_random#show'
+      end
+      resources :customers, only: [:index, :show]
     end
   end
 end

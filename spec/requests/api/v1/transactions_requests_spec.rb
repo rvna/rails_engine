@@ -43,7 +43,7 @@ describe 'transactions endpoints functioning' do
     expect(actual['invoice_id']).to_not eq(54)
   end
 
-  it 'raises expection if transaction name does not match records' do
+  it 'raises exception if transaction name does not match records' do
     get '/api/v1/merchants/find?name=no-name'
     actual = JSON.parse(response.body)
 
