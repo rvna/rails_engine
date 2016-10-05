@@ -5,7 +5,11 @@ Rails.application.routes.draw do
         get 'find', to: 'finder#show'
         get 'find_all', to: 'finder#index'
         get 'random', to: 'random#show'
-        get 'transactions', to: 'transactions#index'
+        get ':id/transactions', to: 'transactions#index'
+        get ':id/invoice_items', to: 'invoice_items#index'
+        get ':id/items', to: 'items#index'
+        get ':id/customer', to: 'customers#show'
+        get ':id/merchant', to: 'merchants#show'
       end
       resources :invoices, only: [:index, :show]
 
