@@ -60,7 +60,6 @@ describe 'transactions endpoints functioning' do
     expected = {
       'id' => transaction.id,
       'credit_card_number' => transaction.credit_card_number,
-      'credit_card_expiration_date' => transaction.credit_card_expiration_date,
       'result' => transaction.result,
       'invoice_id' => transaction.invoice_id,
     }
