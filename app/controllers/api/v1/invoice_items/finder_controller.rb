@@ -10,7 +10,11 @@ class Api::V1::InvoiceItems::FinderController < ApplicationController
   private
 
   def invoice_item_params
-    params.permit(:id, :quantity, :unit_price, :created_at, :updated_at, :item_id, :invoice_id)
+    if params.keys.include?('unit_price')
+      {unit_price: (params['unit_price'].to_f * 100)}
+    else
+      params.permit(:id, :quantity, :created_at, :updated_at, :item_id, :invoice_id)
+    end
   end
 
 end

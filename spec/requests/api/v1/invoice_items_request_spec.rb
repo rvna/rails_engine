@@ -30,10 +30,32 @@ RSpec.describe 'Invoice Items API' do
     expect(output["unit_price"]).to eq('2.22')
   end
 
+  it 'finds an invoice item by price' do
+    create(:invoice_item, quantity: 6, unit_price: 222)
+
+    get '/api/v1/invoice_items/find.json?unit_price=2.22'
+    output = JSON.parse(response.body)
+
+    expect(response.status).to eq(200)
+    expect(output["quantity"]).to eq(6)
+  end
+
   it 'finds multiple invoice items by quantity' do
     create_list(:invoice_item, 2, quantity: 6)
 
     get '/api/v1/invoice_items/find_all.json?quantity=6'
+    output = JSON.parse(response.body)
+
+    expect(response.status).to eq(200)
+    expect(output.count).to eq(2)
+  end
+
+  it 'finds multiple invoice items by price' do
+    create(:invoice_item, quantity: 6, unit_price: 222)
+    create(:invoice_item, quantity: 4, unit_price: 223)
+    create(:invoice_item, quantity: 3, unit_price: 222)
+
+    get '/api/v1/invoice_items/find_all.json?unit_price=2.22'
     output = JSON.parse(response.body)
 
     expect(response.status).to eq(200)
