@@ -14,7 +14,10 @@ Rails.application.routes.draw do
         get 'random', to: 'random#show'
       end
       resources :items, only: [:index, :show] do
-        get 'invoice_items', to: 'items_invoice_items#index'
+        scope module: 'items' do
+          get 'invoice_items', to: 'invoice_items#index'
+          get 'merchant', to: 'merchant#show'
+        end
       end
 
       namespace :invoice_items do

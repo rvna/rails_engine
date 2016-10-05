@@ -104,6 +104,16 @@ RSpec.describe 'Items API' do
    expect(actual[0]['unit_price']).to eq("5.00")
    expect(actual.count).to eq(3)
  end
+
+ it 'returns the associated merchant' do
+   merchant = create(:merchant, name: 'Pierre')
+   item = create(:item, merchant_id: merchant.id)
+
+   get "/api/v1/items/#{item.id}/merchant.json"
+   actual = JSON.parse(response.body)
+
+   expect(actual['name']).to eq('Pierre')
+ end
    
    
 end
