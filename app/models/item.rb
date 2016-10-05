@@ -3,4 +3,8 @@ class Item < ApplicationRecord
 
   has_many :invoice_items
   belongs_to :merchant
+
+  def unit_price_in_dollars
+    '%.2f' % (self.unit_price / 100.0)
+  end
 end

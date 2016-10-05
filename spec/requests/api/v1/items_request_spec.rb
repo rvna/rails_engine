@@ -10,10 +10,10 @@ RSpec.describe 'Items API' do
    expect(response.status).to eq(200)
    expect(output.count).to eq(3)
  end
- 
+
  it 'returns a single item' do
    item = create(:item, name: 'cucumber')
-   
+
    get "/api/v1/items/#{item.id}.json"
    output = JSON.parse(response.body)
 
@@ -31,11 +31,31 @@ RSpec.describe 'Items API' do
    expect(output["description"]).to eq('green')
  end
 
+ it 'finds an item by price' do
+   item = create(:item, name: 'cucumber', unit_price: 123)
+   get '/api/v1/items/find.json?unit_price=1.23'
+   output = JSON.parse(response.body)
+
+   expect(response.status).to eq(200)
+   expect(output['name']).to eq('cucumber')
+ end
+
  it 'finds multiple items by name' do
    create_list(:item, 2, name: 'cucumber')
 
    get '/api/v1/items/find_all.json?name=cucumber'
-   output = JSON.parse(response.body) 
+   output = JSON.parse(response.body)
+
+   expect(response.status).to eq(200)
+   expect(output.count).to eq(2)
+ end
+
+ it 'finds saveral items by price' do
+   create(:item, name: 'cucumber', unit_price: 123)
+   create(:item, name: 'apple', unit_price: 120)
+   create(:item, name: 'playstation', unit_price: 123)
+   get '/api/v1/items/find_all.json?unit_price=1.23'
+   output = JSON.parse(response.body)
 
    expect(response.status).to eq(200)
    expect(output.count).to eq(2)
@@ -59,10 +79,18 @@ RSpec.describe 'Items API' do
      'id' => item.id,
      'name' => item.name,
      'description' => item.description,
-     'unit_price' => item.unit_price,
+     'unit_price' => '%.2f' % (item.unit_price / 100.0),
      'merchant_id' => item.merchant_id
    }
 
    expect(actual).to eq(expected)
+ end
+
+ it 'returns the correct price' do
+   item = create(:item, unit_price: 1567280)
+   get "/api/v1/items/#{item.id}.json"
+   actual = JSON.parse(response.body)
+
+   expect(actual['unit_price']).to eq('15672.80')
  end
 end
