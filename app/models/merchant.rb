@@ -3,11 +3,12 @@ class Merchant < ApplicationRecord
   has_many :items
   has_many :invoice_items, through: :invoices
 
-  def total_revenue
-    revenue = self.invoice_items.joins('INNER JOIN transactions
-                                        ON transactions.invoice_id = invoice_items.invoice_id')
-                                .where('transactions.result = ?', 'success')
-                                .sum('invoice_items.unit_price * invoice_items.quantity')
+  def total_revenue(date)
+    revenue = if date.nil?
+                total_revenue_for_merchant
+              else
+                total_revenue_for_merchant_by_day(date)
+              end
    '%.2f' % (revenue / 100.0)
   end
 
@@ -46,5 +47,21 @@ class Merchant < ApplicationRecord
                       .sum('invoice_items.unit_price * invoice_items.quantity')
 
     '%.2f' % (revenue / 100.0)
+  end
+
+  private
+
+  def total_revenue_for_merchant
+    self.invoice_items.joins('INNER JOIN transactions
+                              ON transactions.invoice_id = invoice_items.invoice_id')
+                       .where('transactions.result = ?', 'success')
+                       .sum('invoice_items.unit_price * invoice_items.quantity')
+  end
+
+  def total_revenue_for_merchant_by_day(date)
+    self.invoice_items.joins('INNER JOIN transactions
+                              ON transactions.invoice_id = invoice_items.invoice_id')
+                       .where('transactions.result = ? AND invoices.created_at = ?', 'success', date)
+                       .sum('invoice_items.unit_price * invoice_items.quantity')
   end
 end
