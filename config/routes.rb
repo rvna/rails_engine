@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         get 'find', to: 'finder#show'
         get 'random', to: 'random#show'
         get 'most_items', to: 'items#index'
+        get 'most_revenue', to: 'revenue#index'
         get ':id/revenue', to: 'revenue#show'
       end
       resources :merchants, only: [:index, :show]
