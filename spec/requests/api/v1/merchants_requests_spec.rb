@@ -84,4 +84,10 @@ describe 'merchants endpoints functioning' do
 
     expect(actual['revenue']).to eq('300.00')
   end
+
+  it 'returns the top x merchants ranked by total number of items sold' do
+  end
+
+
+    
 end
