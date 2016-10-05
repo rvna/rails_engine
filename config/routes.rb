@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         get 'random', to: 'random#show'
       end
       resources :invoice_items, only: [:index, :show]
+      
       namespace :merchants do
         get 'find_all', to: 'finder#index'
         get 'find', to: 'finder#show'
@@ -55,6 +56,7 @@ Rails.application.routes.draw do
       resources :customers, only: [:index, :show] do
         scope module: 'customers' do
           get 'invoices', to: 'invoices#index'
+          get 'transactions', to: 'transactions#index'
         end
       end
     end
