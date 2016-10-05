@@ -10,7 +10,7 @@ RSpec.describe 'Invoices API' do
     expect(response.status).to eq(200)
     expect(output.count).to eq(3)
   end
-  
+
   it 'returns an individual invoice' do
     invoice = create(:invoice, status: 'shipped')
 
@@ -43,7 +43,7 @@ RSpec.describe 'Invoices API' do
 
   it 'finds an invoice by the time it was created' do
     create(:invoice, status: 'shipped', created_at: '1999-01-01')
-    
+
     get '/api/v1/invoices/find.json?created_at=1999-01-01'
     output = JSON.parse(response.body)
 
@@ -53,7 +53,7 @@ RSpec.describe 'Invoices API' do
 
   it 'finds an invoice by the time it was updated' do
     create(:invoice, status: 'shipped', updated_at: '1999-01-01')
-    
+
     get '/api/v1/invoices/find.json?updated_at=1999-01-01'
     output = JSON.parse(response.body)
 
@@ -94,5 +94,31 @@ RSpec.describe 'Invoices API' do
 
     expect(actual).to eq(expected)
   end
-end
 
+  it 'returns a collection of associated transactions' do
+    invoice = create(:invoice)
+    transaction = create(:transactions, invoice_id: invoice.id, result: 'failed')
+    create(:transactions, invoice_id: invoice.id)
+    get "/api/v1/invoices/#{invoice.id}/transactions"
+    expected = JSON.parse(response.body)
+
+    expect(expected.count).to eq(2)
+    expect(expected[0]['result']).to eg('failed')
+  end
+
+  it 'returns a collection of associated invoice items' do
+    # GET /api/v1/invoices/:id/invoice_items returns a collection of associated invoice items
+  end
+
+  it 'returns a collection of associated items' do
+    # GET /api/v1/invoices/:id/items returns a collection of associated items
+  end
+
+  it 'returns the associated customer' do
+    # GET /api/v1/invoices/:id/customer returns the associated customer
+  end
+
+  it 'returns the associated merchant' do
+    # GET /api/v1/invoices/:id/merchant returns the associated merchant
+  end
+end
