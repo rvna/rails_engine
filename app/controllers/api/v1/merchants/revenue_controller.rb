@@ -6,4 +6,8 @@ class Api::V1::Merchants::RevenueController < ApplicationController
   def index
     @merchants = Merchant.most_revenue(params[:quantity])
   end
+
+  def date
+    @total_revenue_by_day = Merchant.total_revenue_by_day(params[:date])
+  end
 end

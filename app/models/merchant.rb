@@ -27,11 +27,24 @@ class Merchant < ApplicationRecord
             .joins('INNER JOIN transactions
                     ON transactions.invoice_id = invoice_items.invoice_id')
             .where('transactions.result = ?', 'success')
-            .select('merchants.*, sum(invoice_items.unit_price * invoice_items.quantity) 
+            .select('merchants.*, sum(invoice_items.unit_price * invoice_items.quantity)
                     AS total_revenue')
             .group('merchants.id')
             .order('total_revenue desc')
             .limit(quantity)
   end
 
+  def self.total_revenue_by_day(date)
+    revenue = Merchant.joins('INNER JOIN invoices
+                              ON merchants.id = invoices.merchant_id')
+                      .joins('INNER JOIN invoice_items
+                              ON invoices.id = invoice_items.invoice_id')
+                      .joins('INNER JOIN transactions
+                              ON transactions.invoice_id = invoice_items.invoice_id')
+                      .where('invoices.created_at = ?', date)
+                      .where('transactions.result = ?', 'success')
+                      .sum('invoice_items.unit_price * invoice_items.quantity')
+
+    '%.2f' % (revenue / 100.0)
+  end
 end
