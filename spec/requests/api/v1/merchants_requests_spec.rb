@@ -66,4 +66,22 @@ describe 'merchants endpoints functioning' do
 
     expect(actual).to eq(expected)
   end
+
+  it 'returns a given merchants total revenue' do
+    merchant = create(:merchant)
+    invoice1 = create(:invoice, merchant_id: merchant.id)
+    create(:invoice_item, invoice_id: invoice1.id, unit_price: 10000, quantity: 2)
+    create(:transaction, invoice_id: invoice1.id, result: 'success')
+    invoice2 = create(:invoice, merchant_id: merchant.id)
+    create(:invoice_item, invoice_id: invoice2.id, unit_price: 10000)
+    create(:transaction, invoice_id: invoice2.id, result: 'success')
+    invoice3 = create(:invoice, merchant_id: merchant.id)
+    create(:invoice_item, invoice_id: invoice3.id, unit_price: 10000)
+    create(:transaction, invoice_id: invoice3.id, result: 'failed')
+
+    get "/api/v1/merchants/#{merchant.id}/revenue.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual['revenue']).to eq('300.00')
+  end
 end

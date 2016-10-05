@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         get 'find_all', to: 'finder#index'
         get 'find', to: 'finder#show'
         get 'random', to: 'random#show'
+        get ':id/revenue', to: 'revenue#show'
       end
       resources :merchants, only: [:index, :show]
       namespace :transactions do
