@@ -97,28 +97,58 @@ RSpec.describe 'Invoices API' do
 
   it 'returns a collection of associated transactions' do
     invoice = create(:invoice)
-    transaction = create(:transactions, invoice_id: invoice.id, result: 'failed')
-    create(:transactions, invoice_id: invoice.id)
-    get "/api/v1/invoices/#{invoice.id}/transactions"
-    expected = JSON.parse(response.body)
+    transaction = create(:transaction, invoice_id: invoice.id, result: 'failed')
+    create(:transaction, invoice_id: invoice.id)
+    get "/api/v1/invoices/#{invoice.id}/transactions.json"
+    actual = JSON.parse(response.body)
 
-    expect(expected.count).to eq(2)
-    expect(expected[0]['result']).to eg('failed')
+    expect(actual.count).to eq(2)
+    expect(actual[0]['result']).to eq('failed')
   end
 
   it 'returns a collection of associated invoice items' do
-    # GET /api/v1/invoices/:id/invoice_items returns a collection of associated invoice items
+    invoice = create(:invoice)
+    create(:invoice_item, invoice_id: invoice.id, unit_price: 1000)
+    create(:invoice_item, invoice_id: invoice.id)
+
+    get "/api/v1/invoices/#{invoice.id}/invoice_items.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual.count).to eq(2)
+    expect(actual[0]['unit_price']).to eq('10.00')
   end
 
   it 'returns a collection of associated items' do
-    # GET /api/v1/invoices/:id/items returns a collection of associated items
+    invoice = create(:invoice)
+    item1 = create(:item, name: 'Dude')
+    item2 = create(:item)
+    create(:invoice_item, invoice_id: invoice.id, item_id: item1.id)
+    create(:invoice_item, invoice_id: invoice.id, item_id: item2.id)
+
+    get "/api/v1/invoices/#{invoice.id}/items.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual.count).to eq(2)
+    expect(actual[0]['name']).to eq('Dude')
   end
 
   it 'returns the associated customer' do
-    # GET /api/v1/invoices/:id/customer returns the associated customer
+    customer = create(:customer, first_name: 'Dude')
+    invoice = create(:invoice, customer_id: customer.id)
+
+    get "/api/v1/invoices/#{invoice.id}/customer.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual['first_name']).to eq('Dude')
   end
 
   it 'returns the associated merchant' do
-    # GET /api/v1/invoices/:id/merchant returns the associated merchant
+    merchant = create(:merchant, name: 'Dude')
+    invoice = create(:invoice, merchant_id: merchant.id)
+
+    get "/api/v1/invoices/#{invoice.id}/merchant.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual['name']).to eq('Dude')
   end
 end

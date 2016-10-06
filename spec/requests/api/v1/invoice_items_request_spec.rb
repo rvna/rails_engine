@@ -94,4 +94,22 @@ RSpec.describe 'Invoice Items API' do
 
     expect(actual['unit_price']).to eq('15672.80')
   end
+
+  it 'returns the associated invoice' do
+    invoice = create(:invoice, status: 'failed')
+    invoice_item = create(:invoice_item, invoice_id: invoice.id)
+    get "/api/v1/invoice_items/#{invoice_item.id}/invoice.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual['status']).to eq('failed')
+  end
+
+  it 'returns the associated item' do
+    item = create(:item, name: 'Dude')
+    invoice_item = create(:invoice_item, item_id: item.id)
+    get "/api/v1/invoice_items/#{invoice_item.id}/item.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual['name']).to eq('Dude')
+  end
 end
