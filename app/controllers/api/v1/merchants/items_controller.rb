@@ -1,5 +1,5 @@
 class Api::V1::Merchants::ItemsController < ApplicationController
   def index
-    @merchants = Merchant.top_selling_items(params[:quantity])
+    @items = Merchant.find_by(id: params[:merchant_id]).items
   end
 end

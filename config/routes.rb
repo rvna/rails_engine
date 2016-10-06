@@ -31,12 +31,17 @@ Rails.application.routes.draw do
         get 'find_all', to: 'finder#index'
         get 'find', to: 'finder#show'
         get 'random', to: 'random#show'
-        get 'most_items', to: 'items#index'
+        get 'most_items', to: 'top_items#index'
         get 'revenue', to: 'revenue#date'
         get 'most_revenue', to: 'revenue#index'
         get ':id/revenue', to: 'revenue#show'
       end
-      resources :merchants, only: [:index, :show]
+      resources :merchants, only: [:index, :show] do
+        scope module: 'merchants' do
+          get 'items', to: 'items#index'
+        end
+      end
+
       namespace :transactions do
         get 'find_all', to: 'finder#index'
         get 'find', to: 'finder#show'
