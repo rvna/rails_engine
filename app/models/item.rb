@@ -31,6 +31,7 @@ class Item < ApplicationRecord
               .group('items.id')
               .order('items_sold DESC')
               .limit(quantity)
+  end
 
   def self.most_revenue(quantity)
     woo =Item.unscoped.joins(:invoice_items)
