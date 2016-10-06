@@ -226,14 +226,14 @@ describe 'merchants endpoints functioning' do
   it 'returns a collection of customers which have pending (unpaid) invoices' do
     merchant = create(:merchant)
     customer1 = create(:customer, first_name: 'Ted')
-    invoice1 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id)
+    invoice1 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id, status: 'invoice1')
     create(:transaction, invoice_id: invoice1.id, result: 'failed')
     create(:transaction, invoice_id: invoice1.id, result: 'success')
     customer2 = create(:customer, first_name: 'Bill')
-    invoice2 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id)
+    invoice2 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id, status: 'invoice2')
     create(:transaction, invoice_id: invoice2.id, result: 'failed')
     customer3 = create(:customer, first_name: 'Dude')
-    invoice3 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id)
+    invoice3 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id, status: 'invoice3')
     create(:transaction, invoice_id: invoice3.id, result: 'success')
 
     get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"

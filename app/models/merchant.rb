@@ -13,6 +13,14 @@ class Merchant < ApplicationRecord
    '%.2f' % (revenue / 100.0)
   end
 
+  def pending_invoices
+    woo = self.invoices.joins('INNER JOIN transactions
+                         ON transactions.invoice_id = invoices.id')
+                 .group('invoices.id')
+                 .where('transactions.result != ?', 'success')
+                 byebug
+  end
+
   def self.top_selling_items(quantity)
     Merchant.joins(:invoice_items)
             .joins('INNER JOIN transactions
