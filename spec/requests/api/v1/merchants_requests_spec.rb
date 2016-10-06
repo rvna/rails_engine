@@ -170,7 +170,7 @@ describe 'merchants endpoints functioning' do
     create(:invoice_item, invoice_id: invoice2.id, unit_price: 10000)
     create(:transaction, invoice_id: invoice2.id, result: 'success')
     invoice3 = create(:invoice, merchant_id: merchant.id, created_at: '2012-03-16 11:56:05')
-    create(:invoice_item, invoice_id: invoice3.id, unit_price: 10000) 
+    create(:invoice_item, invoice_id: invoice3.id, unit_price: 10000)
     create(:transaction, invoice_id: invoice3.id, result: 'failed')
 
     get "/api/v1/merchants/#{merchant.id}/revenue.json?date=2012-03-16 11:56:05"
@@ -196,8 +196,30 @@ describe 'merchants endpoints functioning' do
 
     get "/api/v1/merchants/#{merchant.id}/invoices.json"
     actual = JSON.parse(response.body)
-    
+
     expect(actual[0]['status']).to eq('success')
     expect(actual.count).to eq(3)
+  end
+
+  it 'returns the customer who has conducted the most successful transactions' do
+    merchant = create(:merchant)
+    customer1 = create(:customer, first_name: 'Bill')
+    invoice1 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id)
+    transaction = create(:transaction, invoice_id: invoice1.id, result: 'success')
+    customer2 = create(:customer, first_name: 'Ted')
+    invoice2 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id)
+    transaction = create(:transaction, invoice_id: invoice2.id, result: 'success')
+    invoice3 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id)
+    transaction = create(:transaction, invoice_id: invoice3.id, result: 'success')
+    invoice5 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id)
+    transaction = create(:transaction, invoice_id: invoice5.id, result: 'failed')
+    customer3 = create(:customer, first_name: 'Dude')
+    invoice4 = create(:invoice, merchant_id: merchant.id, customer_id: customer3.id)
+    transaction = create(:transaction, invoice_id: invoice4.id, result: 'success')
+
+    get "/api/v1/merchants/#{merchant.id}/favorite_customer.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual['first_name']).to eq('Ted')
   end
 end

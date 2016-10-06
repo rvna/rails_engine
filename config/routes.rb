@@ -5,13 +5,16 @@ Rails.application.routes.draw do
         get 'find', to: 'finder#show'
         get 'find_all', to: 'finder#index'
         get 'random', to: 'random#show'
-        get ':id/transactions', to: 'transactions#index'
-        get ':id/invoice_items', to: 'invoice_items#index'
-        get ':id/items', to: 'items#index'
-        get ':id/customer', to: 'customers#show'
-        get ':id/merchant', to: 'merchants#show'
       end
-      resources :invoices, only: [:index, :show]
+      resources :invoices, only: [:index, :show] do
+        scope module: 'invoices' do
+          get 'transactions', to: 'transactions#index'
+          get 'invoice_items', to: 'invoice_items#index'
+          get 'items', to: 'items#index'
+          get 'customer', to: 'customers#show'
+          get 'merchant', to: 'merchants#show'
+        end
+      end
 
       namespace :items do
         get 'find', to: 'finder#show'
@@ -29,11 +32,14 @@ Rails.application.routes.draw do
         get 'find', to: 'finder#show'
         get 'find_all', to: 'finder#index'
         get 'random', to: 'random#show'
-        get ':id/invoice', to: 'invoices#show'
-        get ':id/item', to: 'items#show'
       end
-      resources :invoice_items, only: [:index, :show]
-      
+      resources :invoice_items, only: [:index, :show] do
+        scope module: 'invoice_items' do
+          get 'invoice', to: 'invoices#show'
+          get 'item', to: 'items#show'
+        end
+      end
+
       namespace :merchants do
         get 'find_all', to: 'finder#index'
         get 'find', to: 'finder#show'
@@ -47,6 +53,7 @@ Rails.application.routes.draw do
         scope module: 'merchants' do
           get 'items', to: 'items#index'
           get 'invoices', to: 'invoices#index'
+          get 'favorite_customer', to: 'top_customer#show'
         end
       end
 
