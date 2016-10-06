@@ -114,6 +114,34 @@ RSpec.describe 'Items API' do
 
    expect(actual['name']).to eq('Pierre')
  end
-   
-   
+
+ it 'returns the date with the most sales for the given item using the invoice date' do
+   item = create(:item)
+   invoice1 = create(:invoice, created_at: '2012-03-23T10:55:29.000Z')
+   invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, item_id: item.id, quantity: 2)
+   create(:transaction, invoice_id: invoice1.id, result: 'success')
+   invoice2 = create(:invoice, created_at: '2012-04-23T10:55:29.000Z')
+   invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, item_id: item.id)
+   create(:transaction, invoice_id: invoice2.id, result: 'success')
+
+   get "/api/v1/items/#{item.id}/best_day.json"
+   actual = JSON.parse(response.body)
+
+   expect(actual['best_day']).to eq('2012-03-23T10:55:29.000Z')
+ end
+
+ it 'returns the most recent day if the sales are tied' do
+   item = create(:item)
+   invoice1 = create(:invoice, created_at: '2012-03-23T10:55:29.000Z')
+   invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, item_id: item.id, quantity: 2)
+   create(:transaction, invoice_id: invoice1.id, result: 'success')
+   invoice2 = create(:invoice, created_at: '2012-04-23T10:55:29.000Z')
+   invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, item_id: item.id, quantity: 2)
+   create(:transaction, invoice_id: invoice2.id, result: 'success')
+
+   get "/api/v1/items/#{item.id}/best_day.json"
+   actual = JSON.parse(response.body)
+
+   expect(actual['best_day']).to eq('2012-04-23T10:55:29.000Z')
+ end
 end
