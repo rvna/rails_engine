@@ -106,4 +106,25 @@ RSpec.describe Merchant, type: :model do
     expect(result).to eq('200.00')
   end
 
+  it 'returns the customer who has conducted the most successful transactions' do
+    merchant = create(:merchant)
+    customer1 = create(:customer, first_name: 'Bill')
+    invoice1 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id)
+    transaction = create(:transaction, invoice_id: invoice1.id, result: 'success')
+    customer2 = create(:customer, first_name: 'Ted')
+    invoice2 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id)
+    transaction = create(:transaction, invoice_id: invoice2.id, result: 'success')
+    invoice3 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id)
+    transaction = create(:transaction, invoice_id: invoice3.id, result: 'success')
+    invoice5 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id)
+    transaction = create(:transaction, invoice_id: invoice5.id, result: 'failed')
+    customer3 = create(:customer, first_name: 'Dude')
+    invoice4 = create(:invoice, merchant_id: merchant.id, customer_id: customer3.id)
+    transaction = create(:transaction, invoice_id: invoice4.id, result: 'success')
+
+    result = merchant.top_customer
+
+    expect(result.first_name).to eq('Ted')
+  end
+
 end
