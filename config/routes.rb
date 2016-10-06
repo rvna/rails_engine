@@ -21,6 +21,7 @@ Rails.application.routes.draw do
         get 'find_all', to: 'finder#index'
         get 'random', to: 'random#show'
         get 'most_items', to: 'most_items#index'
+        get 'most_revenue', to: 'most_revenue#index'
       end
       resources :items, only: [:index, :show] do
         scope module: 'items' do
