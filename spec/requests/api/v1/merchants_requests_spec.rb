@@ -200,4 +200,23 @@ describe 'merchants endpoints functioning' do
     expect(actual[0]['status']).to eq('success')
     expect(actual.count).to eq(3)
   end
+
+  it 'returns the customer who has conducted the most successful transactions' do
+    merchant = create(:merchant)
+    customer1 = create(:customer, first_name: 'Bill')
+    invoice1 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id)
+    transaction = create(:transaction, invoice_id: invoice1.id, result: 'success')
+    customer2 = create(:customer, first_name: 'Ted')
+    invoice2 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id)
+    transaction = create(:transaction, invoice_id: invoice2.id, result: 'success')
+    invoice3 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id)
+    transaction = create(:transaction, invoice_id: invoice3.id, result: 'success')
+
+    get "/api/v1/merchants/#{merchant.id}/favorite_customer.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual['first_name']).to eq('Ted')
+  end
+
+
 end
