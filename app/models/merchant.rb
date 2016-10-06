@@ -49,6 +49,9 @@ class Merchant < ApplicationRecord
     '%.2f' % (revenue / 100.0)
   end
 
+  def top_customer
+  end
+
   private
 
   def total_revenue_for_merchant

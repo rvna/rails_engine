@@ -50,6 +50,7 @@ Rails.application.routes.draw do
         scope module: 'merchants' do
           get 'items', to: 'items#index'
           get 'invoices', to: 'invoices#index'
+          get 'favorite_customer', to: 'top_customer#show'
         end
       end
 
