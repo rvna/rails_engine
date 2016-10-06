@@ -4,7 +4,7 @@ class Merchant < ApplicationRecord
   has_many :invoice_items, through: :invoices
   has_many :customers, through: :invoices
 
-  def total_revenue(date)
+  def total_revenue(date = nil)
     revenue = if date.nil?
                 total_revenue_for_merchant
               else
