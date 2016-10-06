@@ -1,3 +1,3 @@
-json.array! @pending_invoices do |invoice|
-  json.(invoice, :id, :status, :customer_id, :merchant_id)
+json.array! @pending_invoices do |customer|
+  json.(customer, :id, :first_name, :last_name)
 end

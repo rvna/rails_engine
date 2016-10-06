@@ -223,23 +223,23 @@ describe 'merchants endpoints functioning' do
     expect(actual['first_name']).to eq('Ted')
   end
 
-  xit 'returns a collection of customers which have pending (unpaid) invoices' do
+  it 'returns a collection of customers which have pending (unpaid) invoices' do
     merchant = create(:merchant)
     customer1 = create(:customer, first_name: 'Ted')
     invoice1 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id, status: 'invoice1')
-    create(:transaction, invoice_id: invoice1.id, result: 'failed')
+    create(:transaction, invoice_id: invoice1.id, result: 'success')
     create(:transaction, invoice_id: invoice1.id, result: 'success')
     customer2 = create(:customer, first_name: 'Bill')
-    invoice2 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id, status: 'invoice2')
+    invoice2 = create(:invoice, merchant_id: merchant.id, customer_id: customer2.id, status: 'invoice2')
     create(:transaction, invoice_id: invoice2.id, result: 'failed')
     customer3 = create(:customer, first_name: 'Dude')
-    invoice3 = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id, status: 'invoice3')
+    invoice3 = create(:invoice, merchant_id: merchant.id, customer_id: customer3.id, status: 'invoice3')
     create(:transaction, invoice_id: invoice3.id, result: 'success')
 
-    get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
+    get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices.json"
     actual = JSON.parse(response.body)
 
-    expect(actual.count).to eq(2)
-    expect(actual.first['first_name']).to eq('Ted')
+    expect(actual.count).to eq(1)
+    expect(actual.first['first_name']).to eq('Bill')
   end
 end
