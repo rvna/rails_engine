@@ -54,6 +54,7 @@ Rails.application.routes.draw do
           get 'items', to: 'items#index'
           get 'invoices', to: 'invoices#index'
           get 'favorite_customer', to: 'top_customer#show'
+          get 'customers_with_pending_invoices', to: 'pending_invoices#index'
         end
       end
 
@@ -77,6 +78,7 @@ Rails.application.routes.draw do
         scope module: 'customers' do
           get 'invoices', to: 'invoices#index'
           get 'transactions', to: 'transactions#index'
+          get 'favorite_merchant', to: 'top_merchant#show'
         end
       end
     end
