@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         scope module: 'items' do
           get 'invoice_items', to: 'invoice_items#index'
           get 'merchant', to: 'merchant#show'
+          get 'best_day', to: 'best_day#show'
         end
       end
 
