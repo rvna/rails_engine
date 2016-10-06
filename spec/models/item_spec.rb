@@ -49,4 +49,29 @@ RSpec.describe Item, type: :model do
     expect(result[1]['name']).to eq('shoe')
     expect(result.length).to eq(2)
   end
+
+  it 'returns the top x item instances ranked by total number sold' do
+    item1 = create(:item, name: 'Dude')
+    invoice1 = create(:invoice)
+    create(:invoice_item, invoice_id: invoice1.id, item_id: item1.id, quantity: 2)
+    create(:transaction, invoice_id: invoice1.id, result: 'success')
+    invoice2 = create(:invoice)
+    create(:invoice_item, invoice_id: invoice2.id, item_id: item1.id)
+    create(:transaction, invoice_id: invoice2.id, result: 'success')
+    item2 = create(:item)
+    invoice3 = create(:invoice)
+    create(:invoice_item, invoice_id: invoice3.id, item_id: item2.id, quantity: 2)
+    create(:transaction, invoice_id: invoice3.id, result: 'success')
+    invoice4 = create(:invoice)
+    create(:invoice_item, invoice_id: invoice4.id, item_id: item2.id)
+    create(:transaction, invoice_id: invoice4.id, result: 'failed')
+    item3 = create(:item)
+    invoice4 = create(:invoice)
+    create(:invoice_item, invoice_id: invoice4.id, item_id: item1.id, quantity: 1)
+    create(:transaction, invoice_id: invoice4.id, result: 'success')
+
+    result = Item.most_items(2)
+
+    expect(result.first['name']).to eq('Dude')
+  end
 end
