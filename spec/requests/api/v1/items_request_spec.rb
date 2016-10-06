@@ -93,4 +93,27 @@ RSpec.describe 'Items API' do
 
    expect(actual['unit_price']).to eq('15672.80')
  end
+
+ it 'returns a collection of associated invoice items' do
+   item = create(:item)
+   invoice_items = create_list(:invoice_item, 3, item_id: item.id, unit_price: 500)
+
+   get "/api/v1/items/#{item.id}/invoice_items.json"
+   actual = JSON.parse(response.body)
+
+   expect(actual[0]['unit_price']).to eq("5.00")
+   expect(actual.count).to eq(3)
+ end
+
+ it 'returns the associated merchant' do
+   merchant = create(:merchant, name: 'Pierre')
+   item = create(:item, merchant_id: merchant.id)
+
+   get "/api/v1/items/#{item.id}/merchant.json"
+   actual = JSON.parse(response.body)
+
+   expect(actual['name']).to eq('Pierre')
+ end
+   
+   
 end

@@ -66,4 +66,27 @@ describe 'customers endpoints functioning' do
 
     expect(actual).to eq(expected)
   end
+
+  it 'returns a collection of associated invoices' do
+    customer = create(:customer)
+    invoices = create_list(:invoice, 3, customer_id: customer.id, status: 'success')
+
+    get "/api/v1/customers/#{customer.id}/invoices.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual[0]['status']).to eq('success')
+    expect(actual.count).to eq(3)
+  end
+
+  it 'returns a collection of associated transactions' do
+    customer = create(:customer)
+    invoice = create(:invoice, customer_id: customer.id)
+    transactions = create_list(:transaction, 3, invoice_id: invoice.id, result: 'success')
+
+    get "/api/v1/customers/#{customer.id}/transactions.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual[0]['result']).to eq('success')
+    expect(actual.count).to eq(3)
+  end
 end

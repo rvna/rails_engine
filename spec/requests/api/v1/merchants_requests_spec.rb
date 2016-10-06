@@ -178,4 +178,26 @@ describe 'merchants endpoints functioning' do
 
     expect(actual['revenue']).to eq('200.00')
   end
+
+  it 'returns a collection of associated items' do
+    merchant = create(:merchant)
+    items = create_list(:item, 3, merchant_id: merchant.id, name: 'pizza')
+
+    get "/api/v1/merchants/#{merchant.id}/items.json"
+    actual = JSON.parse(response.body)
+
+    expect(actual[0]['name']).to eq('pizza')
+    expect(actual.count).to eq(3)
+  end
+
+  it 'returns a collection of associated invoices' do
+    merchant = create(:merchant)
+    invoices = create_list(:invoice, 3, merchant_id: merchant.id, status: 'success')
+
+    get "/api/v1/merchants/#{merchant.id}/invoices.json"
+    actual = JSON.parse(response.body)
+    
+    expect(actual[0]['status']).to eq('success')
+    expect(actual.count).to eq(3)
+  end
 end
