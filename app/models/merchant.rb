@@ -14,11 +14,10 @@ class Merchant < ApplicationRecord
   end
 
   def pending_invoices
-    woo = self.invoices.joins('INNER JOIN transactions
+    self.customers.joins('INNER JOIN transactions
                          ON transactions.invoice_id = invoices.id')
-                 .group('invoices.id')
-                 .where('transactions.result != ?', 'success')
-
+                  .group('customers.id, invoices.id')
+                  .where('transactions.result != ?', 'success')
   end
 
   def self.top_selling_items(quantity)
