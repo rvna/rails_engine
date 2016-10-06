@@ -10,7 +10,7 @@ class Item < ApplicationRecord
   end
 
   def best_day
-    woo = self.invoices.joins('INNER JOIN transactions
+    self.invoices.joins('INNER JOIN transactions
                                ON transactions.invoice_id = invoices.id')
                         .where('transactions.result = ?', 'success')
                         .select('invoices.created_at, SUM(invoice_items.quantity) AS items_sold')
@@ -19,5 +19,16 @@ class Item < ApplicationRecord
                         .limit(1)
                         .first
                         .created_at
+  end
+
+  def self.most_revenue(quantity)
+    woo =Item.unscoped.joins(:invoice_items)
+        .joins('INNER JOIN transactions
+                ON transactions.invoice_id = invoice_items.invoice_id')
+        .where('transactions.result = ?', 'success')
+        .select('items.*, sum(invoice_items.quantity * invoice_items.unit_price) AS subtotal')
+        .group('items.id')
+        .order('subtotal DESC')
+        .limit(quantity)
   end
 end
