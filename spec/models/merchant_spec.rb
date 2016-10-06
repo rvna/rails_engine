@@ -89,4 +89,21 @@ RSpec.describe Merchant, type: :model do
     expect(result).to eq('9.00')
   end
 
+  it 'returns a given merchants total revenue by date' do
+    merchant = create(:merchant)
+    invoice1 = create(:invoice, merchant_id: merchant.id, created_at: '2012-03-16 11:56:05')
+    create(:invoice_item, invoice_id: invoice1.id, unit_price: 10000, quantity: 2)
+    create(:transaction, invoice_id: invoice1.id, result: 'success')
+    invoice2 = create(:invoice, merchant_id: merchant.id, created_at: '2012-04-16 11:56:05')
+    create(:invoice_item, invoice_id: invoice2.id, unit_price: 10000)
+    create(:transaction, invoice_id: invoice2.id, result: 'success')
+    invoice3 = create(:invoice, merchant_id: merchant.id, created_at: '2012-03-16 11:56:05')
+    create(:invoice_item, invoice_id: invoice3.id, unit_price: 10000)
+    create(:transaction, invoice_id: invoice3.id, result: 'failed')
+
+    result = merchant.total_revenue('2012-03-16 11:56:05')
+
+    expect(result).to eq('200.00')
+  end
+
 end
