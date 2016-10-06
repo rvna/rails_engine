@@ -18,8 +18,7 @@ class Merchant < ApplicationRecord
                          ON transactions.invoice_id = invoices.id')
                  .group('invoices.id')
                  .where('transactions.result != ?', 'success')
-    woo = self.invoices.pending
-                 byebug
+
   end
 
   def self.top_selling_items(quantity)
