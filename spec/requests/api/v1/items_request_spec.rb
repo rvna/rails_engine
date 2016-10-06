@@ -114,6 +114,4 @@ RSpec.describe 'Items API' do
 
    expect(actual['name']).to eq('Pierre')
  end
-   
-   
 end
