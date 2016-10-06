@@ -21,6 +21,18 @@ class Item < ApplicationRecord
                         .created_at
   end
 
+  def self.most_items(quantity)
+    woo = Item.unscoped
+              .joins(:invoice_items)
+              .joins('INNER JOIN transactions
+                      ON transactions.invoice_id = invoice_items.invoice_id')
+              .where('transactions.result = ?', 'success')
+              .select('items.*, sum(invoice_items.quantity) AS items_sold')
+              .group('items.id')
+              .order('items_sold DESC')
+              .limit(quantity)
+  end
+
   def self.most_revenue(quantity)
     woo =Item.unscoped.joins(:invoice_items)
         .joins('INNER JOIN transactions
