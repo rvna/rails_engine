@@ -1,1 +1,1 @@
-json.(@customer, :id, :first_name, :last_name)
+json.(@top_customer, :id, :first_name, :last_name)

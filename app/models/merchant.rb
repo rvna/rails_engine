@@ -2,6 +2,7 @@ class Merchant < ApplicationRecord
   has_many :invoices
   has_many :items
   has_many :invoice_items, through: :invoices
+  has_many :customers, through: :invoices
 
   def total_revenue(date)
     revenue = if date.nil?
@@ -50,6 +51,14 @@ class Merchant < ApplicationRecord
   end
 
   def top_customer
+    self.customers.select('customers.*, count(transactions.id) AS customer_count')
+                  .joins('INNER JOIN transactions
+                          ON invoices.id = transactions.invoice_id')
+                  .where('transactions.result = ?', 'success')
+                  .group('customers.id')
+                  .order('customer_count DESC')
+                  .limit(1)
+                  .first
   end
 
   private
